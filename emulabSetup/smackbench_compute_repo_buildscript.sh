@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Call common buildscript
-sh /proj/SMACK/scripts/smackbench_compute_common_buildscript.sh
+sh $(dirname $(realpath $0))"/"smackbench_compute_common_buildscript.sh
 
 export DEBIAN_FRONTEND=noninteractive
 
