@@ -27,7 +27,8 @@ class RunSet:
     A class that represents a BenchExec run set.  It contains information 
     critical to filtering, selecting, and displaying run sets
     """
-    def __init__(self, outputXml, inputXml):
+    def __init__(self, outputXml, inputXml, runsetFolder):
+
         """
         Creates a RunSet based on a run's input and output xml files
         """
@@ -35,7 +36,7 @@ class RunSet:
         self.outXml = outputXml
         #self.name = ET.parse(self.outXml).getroot().get("name")
         #   Avoid parsing all output xml files
-        reg = re.compile(r'<result\s.*\sname="(.*?)"\s.*>')
+        reg = re.compile(r'<result\s.*?\sname="(.*?)"\s.*?>?')
         with open(self.outXml) as f:
             for line in f:
                 a = reg.match(line)
@@ -43,7 +44,9 @@ class RunSet:
                     self.name = a.group(1)
                     break
         self.options = self.getOptions()
-        self.fileSet = self.getSetName()
+        self.fileSet = self.getFileSetName()
+        self.date = self.getDate(runsetFolder)
+        self.runsetFolder = runsetFolder
 
     def getOptions(self):
         """
@@ -59,7 +62,7 @@ class RunSet:
                 options[opt.get("name")] = "True"
         return options
 
-    def getSetName(self):
+    def getFileSetName(self):
         """
         Gets the svcomp category (or 'Set' name) defining the specific benchmarks
         that were executed.
@@ -68,6 +71,13 @@ class RunSet:
         #Remove file extension
         noExt = path.splitext(self.outXml)[0]
         return noExt.split(".")[-1]
+
+    def getDate(self, runsetFolder):
+        """
+        Extracts the timestamp from the folder name
+        """
+        reg = re.compile(r'.*(\d\d\d\d\.\d\d\.\d\d_\d\d\.\d\d\.\d\d\.\d*).*')
+        return reg.match(runsetFolder).group(1)
 
 def getAllRunSets(searchRoot, folderPrefix):
     """
@@ -91,8 +101,7 @@ def getAllRunSets(searchRoot, folderPrefix):
         #inputFilename = glob.glob(inputPath + '/*.xml')[0]
         #inFile = path.join(inputPath,inputFilename)
         inFile = glob.glob(inputPath + '/*.xml')[0]
-        curRunSet = RunSet(outFile,inFile)
-        curRunSet.runsetFolder = inputPath[2:]
+        curRunSet = RunSet(outFile,inFile, inputPath[2:])
         runSets.append(curRunSet)
         
     #For each set, if an option isn't used, set it to false.
@@ -142,4 +151,13 @@ def getAllOptionsUsed(runSets):
             possibleOptions[opt] = sorted(possibleOptions[opt], key=natural_sort_key)
     return possibleOptions
 
-
+def filterResultsByCategory(runSets, form):
+    """
+    Filters out result sets that don't match the svcomp category (set) given in
+    the cgi form input parameters.
+    """
+    ret = []
+    for runset in runSets:
+        if runset.fileSet == form['category'].value:
+            ret.append(runset)
+    return ret

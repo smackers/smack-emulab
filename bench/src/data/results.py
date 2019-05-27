@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 from lib import *
 import datetime
 import subprocess
@@ -20,7 +20,7 @@ causes the dynamically generated webpage to be displayed at the client's browser
 """
 
 
-runRoot = "."
+runRoot = "./runs"
 runFolderPrefix = "exec"
 tblGenExe = "../benchexec/bin/table-generator"
 scratchDir = "."
@@ -40,19 +40,11 @@ def filterResultsByRunsetFolder(runSets, form):
     Filters out results that don't have the specified runsetFolder name
     """
     ret = []
+    print "<pre>"
+    print form.getvalue('runset')
+    print "</pre>"
     for runset in runSets:
-        if runset.runsetFolder == form['runset'].value:
-            ret.append(runset)
-    return ret
-
-def filterResultsByCategory(runSets, form):
-    """
-    Filters out result sets that don't match the svcomp category (set) given in
-    the cgi form input parameters.
-    """
-    ret = []
-    for runset in runSets:
-        if runset.fileSet == form['category'].value:
+        if runset.runsetFolder in form.getvalue('runset'):
             ret.append(runset)
     return ret
 

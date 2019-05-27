@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 from lib import *
 import sys
 import cgitb
@@ -18,7 +18,7 @@ generating a table containing these result sets.
 """
 
 
-runRoot = "."
+runRoot = "./runs"
 runFolderPrefix = "exec"
 if __name__ == '__main__':
     print "Content-Type: text/html"     # HTML is following
@@ -26,19 +26,24 @@ if __name__ == '__main__':
     form = cgi.FieldStorage()
 
     runSets = getAllRunSets(runRoot, runFolderPrefix)
+    #print("<pre>", [x.name for x in runSets], "</pre>")
     options = getAllOptionsUsed(runSets)
     optionKeys = sorted(options.keys())
+    #Get rid of double entries for witness checked xml files
+    runsetsWoWitcheck = []
     for runset in runSets:
-        if 'witcheck' in runset.outXml:
-            runSets.remove(runset)
+        if 'witchecked' not in runset.outXml:
+            runsetsWoWitcheck.append(runset)
+    runSets = runsetsWoWitcheck
     runSets.sort(key=lambda x: x.inXml, reverse=True)
+    usedFilesets = getSourcefileSetsUsed(runSets)
     print '''
 <h1>SMACK+CORRAL Benchmark Results</h1><hr/>
 <p>Select a set, and select the command line options to include</p>
 <p>Any option with no selected values will include all values for that option</p><hr/>
 <form method="get" action="results.py">'''
 
-    usedFilesets = getSourcefileSetsUsed(runSets)
+
     print '''
     <table>
     <tr><td>Category:</td><td><select name="category">'''
@@ -67,7 +72,8 @@ if __name__ == '__main__':
             <input type="submit" value="Clear" name="Clear">
           </form>
     </td></tr>
-    </table>
+    </table>'''
+    print '''
     <hr/>
     Or select a specific set to view (ignores filters above):<br/><br/>
     <form method="get" action="results.py">
@@ -75,9 +81,53 @@ if __name__ == '__main__':
 
     for runset in runSets:
         print '''
-        <option value="{0}">{0}</option>'''.format(runset.runsetFolder)
+        <option value="{0}">{2}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1}</option>
+        '''.format(runset.runsetFolder, runset.name, runset.date)
     print '''
     </select>      
       <br/><input type="submit" value="Submit" name=Submit">
     </form>
+    <hr/>
     '''
+    # Multi select
+    print '''
+    Or select a category, and select specific runs to compare:<br/><br/>
+    <form method="get" action="index.py">'''
+
+    usedFilesets = getSourcefileSetsUsed(runSets)
+    print '''
+    <table>
+    <tr><td>Category:</td><td><select name="category" onchange="this.form.submit()">
+    <option/>'''
+
+    for fileset in usedFilesets:
+        print '''
+        <option value="{0}"'''.format(fileset)
+        if "category" in form and form['category'].value == fileset:
+            print " selected"
+        print '''>{0}</option>'''.format(fileset)
+    print '''
+    </select></form></td></tr></table>'''
+
+
+    if "category" in form:
+        print '''
+        <form method="get" action="results.py"><table>'''
+        runSets = filterResultsByCategory(runSets, form)
+        for runset in runSets:
+            print '''
+            <tr>
+              <td>
+                <input type="checkbox" name="runset" value="{0}">
+              </td>
+              <td>
+                {2}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1}
+              </td>
+            </tr>'''.format(runset.runsetFolder, runset.name, runset.date)
+        print '''
+        <tr>
+          <td>
+            <input type="submit" value="Submit">
+          </td>
+        </tr>
+    </table></form>'''
