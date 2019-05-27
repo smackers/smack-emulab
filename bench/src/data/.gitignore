@@ -2,5 +2,6 @@
 *.bpl
 *.i
 *.c
+*.dot
 runs/*
 serverLogs/*

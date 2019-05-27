@@ -284,7 +284,10 @@ if __name__ == '__main__':
         #we can blindly kill all running SMACKBench.py instances
         subprocess.check_call(['pkill','-SIGTERM','-f','SMACKBench.py'])
     # New benchexec installation requires PYTHON_PATH to be set
-    os.environ["PYTHONPATH"] += path.join(os.getcwd(), "benchexec")
+    if "PYTHONPATH" in os.environ:
+      os.environ["PYTHONPATH"] += path.join(os.getcwd(), "benchexec")
+    else:
+      os.environ["PYTHONPATH"] = path.join(os.getcwd(), "benchexec")
     #Read the config file
     cfgObj = get_config(args.config_file)
     #EVERYTHING in SMACKBench is relative to dataFolder (internally, that is)

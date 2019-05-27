@@ -22,8 +22,8 @@ sudo apt-get install python3-tempita python3-pip python3-yaml -y
 sudo pip3 install coloredlogs
 rm -f *.deb
 wget https://github.com/sosy-lab/benchexec/releases/download/1.18/benchexec_1.18-1_all.deb
-dpkg -i benchexec_*.deb
-adduser $(logname) benchexec
+sudo dpkg -i benchexec_*.deb
+sudo adduser $USER benchexec
 
 #Install java8 (required by cpachecker)
 #sudo add-apt-repository ppa:openjdk-r/ppa -y
