@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import sys
 sys.dont_write_bytecode = True # prevent creation of .pyc files
 
@@ -199,7 +199,12 @@ def copyInXmlAndInject(cfgObj, outPath, svSet, inXmlFile, memPerRun, desc):
     #Determine the set definition file, relative to the dest input xml file
     bmRel = path.relpath(cfgObj['benchmarkRoot'], path.dirname(dstInXmlFile))
     setDefFile = path.join(bmRel, svSet + ".set")
-    prpDefFile = path.join(bmRel, svSet + ".prp")
+
+    if svSet == 'MemSafety-MemCleanup':
+      prpDefFile = path.join(bmRel, svSet + ".prp")
+    else:
+      prpDefFile = path.join(bmRel, svSet.split('-')[0] + ".prp")
+
     #Inject the set definition file (*.set) path (using relative path)
     #  (benchexec does everything relative to the input xml file)
     inXmlStr = inXmlStr.replace('{SETDEFINITIONFILE}', setDefFile)
@@ -219,7 +224,8 @@ def runBenchExec(cfgObj, inXmlFile, outPath, concurRunCnt, debug):
     #  cwd to dataFolder, and reference everything from this folder.  As
     #  a result, we must patch the benchexecPath so it is relative to 
     #  dataFolder
-    cmd =  [path.join('..', cfgObj['benchexecPath'], 'benchexec')]
+    #cmd =  [path.join('..', cfgObj['benchexecPath'], 'benchexec')]
+    cmd = ['benchexec']
     if debug:
         cmd += ['-d']
     cmd += [inXmlFile]
@@ -268,7 +274,7 @@ def runSMACKBench(cfgObj, svSet, inXmlFile, concurRunCnt, memPerRun, desc):
     #Call benchexec
     runBenchExec(cfgObj, dstInXml, outPath, concurRunCnt, debug = False)
     #Run witness checking
-    witnessCheckingFunc(cfgObj, outPath)
+    #witnessCheckingFunc(cfgObj, outPath)
 
 if __name__ == '__main__':
     args = get_args()
@@ -277,6 +283,8 @@ if __name__ == '__main__':
         #Since only one instance of benchexec can run at a given time,
         #we can blindly kill all running SMACKBench.py instances
         subprocess.check_call(['pkill','-SIGTERM','-f','SMACKBench.py'])
+    # New benchexec installation requires PYTHON_PATH to be set
+    os.environ["PYTHONPATH"] += path.join(os.getcwd(), "benchexec")
     #Read the config file
     cfgObj = get_config(args.config_file)
     #EVERYTHING in SMACKBench is relative to dataFolder (internally, that is)

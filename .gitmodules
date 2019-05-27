@@ -1,0 +1,6 @@
+[submodule "bench/src/data/sv-benchmarks"]
+	path = bench/src/data/sv-benchmarks
+	url = https://github.com/sosy-lab/sv-benchmarks.git
+[submodule "bench/src/benchexec"]
+	path = bench/src/benchexec
+	url = https://github.com/smackers/benchexec.git

@@ -1,0 +1,29 @@
+{
+    "_comment_sctn" : "SMACKBench Path settings",
+
+    "dataFolder"    : "data/",
+
+    "_comment"      : "runsFolder will be looked for in dataFolder",
+    "runsFolder"    : "runs/",
+
+    "_comment"      : "benchmarkRoot contains *.set def files. Looked for in dataFolder",
+    "benchmarkRoot" : "sv-benchmarks/c/",
+
+    "_comment"      : "Benchexec console output itself is loged to logFolder",
+    "logFolder"     : "serverLogs/",
+
+
+
+
+    "_comment_sctn" : "General Path settings",
+
+    "benchexecPath" : "benchexec/bin",
+
+
+
+
+    "_comment_sctn" : "Miscellaneous Benchexec settings",
+
+    "_comment"      : "coreLimit = number of cores for each concurrent run",
+    "coreLimit"     : "1"
+}
