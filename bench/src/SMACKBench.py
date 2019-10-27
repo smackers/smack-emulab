@@ -174,6 +174,19 @@ def generateOutFolder(cfgObj, svSet):
     os.makedirs(outPath)
     return outPath
 
+def getPropFileBySetName(setName):
+    mappings = {'ReachSafety': 'unreach-call',
+                'MemSafety': 'valid-memsafety',
+                'MemSafety-MemCleanup': 'valid-memcleanup',
+                'Systems_BusyBox_MemSafety': 'valid-memsafety',
+                'Systems_BusyBox_NoOverflows': 'no-overflow',
+                'Systems_DeviceDriversLinux64_ReachSafety': 'unreach-call',
+                'NoOverflows': 'no-overflow',
+                'ConcurrencySafety': 'unreach-call',
+                'Termination': 'termination'}
+    key = setName if setName == 'MemSafety-MemCleanup' else setName.split('-')[0]
+    return os.path.join('properties', mappings[key]+'.prp')
+
 def copyInXmlAndInject(cfgObj, outPath, svSet, inXmlFile, memPerRun, desc):
     #Deterime the destination input xml file location
     dstInXmlFile = path.join(outPath, path.split(inXmlFile)[-1])
@@ -200,15 +213,16 @@ def copyInXmlAndInject(cfgObj, outPath, svSet, inXmlFile, memPerRun, desc):
     bmRel = path.relpath(cfgObj['benchmarkRoot'], path.dirname(dstInXmlFile))
     setDefFile = path.join(bmRel, svSet + ".set")
 
-    if svSet == 'MemSafety-MemCleanup':
-      prpDefFile = path.join(bmRel, svSet + ".prp")
-    else:
-      prpDefFile = path.join(bmRel, svSet.split('-')[0] + ".prp")
+    #if svSet == 'MemSafety-MemCleanup':
+    #  prpDefFile = path.join(bmRel, svSet + ".prp")
+    #else:
+    #  prpDefFile = path.join(bmRel, svSet.split('-')[0] + ".prp")
 
     #Inject the set definition file (*.set) path (using relative path)
     #  (benchexec does everything relative to the input xml file)
     inXmlStr = inXmlStr.replace('{SETDEFINITIONFILE}', setDefFile)
-    inXmlStr = inXmlStr.replace('{PROPERTYDEFINITIONFILE}', prpDefFile)
+    #inXmlStr = inXmlStr.replace('{PROPERTYDEFINITIONFILE}', prpDefFile)
+    inXmlStr = inXmlStr.replace('{PROPERTYDEFINITIONFILE}', path.join(bmRel, getPropFileBySetName(svSet)))
 
     #Write the input xml file
     with open(dstInXmlFile, 'w') as dstXml:

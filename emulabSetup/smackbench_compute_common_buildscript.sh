@@ -8,6 +8,9 @@ sudo chmod g+w /mnt/local
 #Change apt-get mirror to local cs.utah.edu mirror (makes it much faster)
 sudo sed -i  "s|us.archive.ubuntu.com/ubuntu/|ubuntu.cs.utah.edu/ubuntu/|g" /etc/apt/sources.list
 
+#Do not prompt plz
+export DEBIAN_FRONTEND=noninteractive
+
 #Install packages
 sudo apt-get update
 # Packages:
@@ -21,8 +24,9 @@ sudo apt-get install htop vim software-properties-common python-daemon libc6-dev
 sudo apt-get install python3-tempita python3-pip python3-yaml -y
 sudo pip3 install coloredlogs
 rm -f *.deb
-wget https://github.com/sosy-lab/benchexec/releases/download/1.18/benchexec_1.18-1_all.deb
-sudo dpkg -i benchexec_*.deb
+#wget https://github.com/sosy-lab/benchexec/releases/download/1.18/benchexec_1.18-1_all.deb
+wget https://github.com/sosy-lab/benchexec/releases/download/2.2/benchexec_2.2-1_all.deb
+sudo apt install --install-recommends ./benchexec_*.deb -y
 sudo adduser $USER benchexec
 
 #Install java8 (required by cpachecker)
@@ -41,6 +45,7 @@ sudo adduser $USER benchexec
 
 #Enable tracking of memory swapping for processes (requires reboot)
 #sudo sed -i '/GRUB_CMDLINE_LINUX=/ s/^\(.*\)\("\)/\1 swapaccount=1\2/' /etc/default/grub
+sudo mkdir -p /etc/default/grub.d
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="${GRUB_CMDLINE_LINUX_DEFAULT} swapaccount=1"' | sudo tee /etc/default/grub.d/swapaccount-for-benchexec.cfg
 sudo update-grub
 
