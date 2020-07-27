@@ -178,13 +178,15 @@ def getPropFileBySetName(setName):
     mappings = {'ReachSafety': 'unreach-call',
                 'MemSafety': 'valid-memsafety',
                 'MemSafety-MemCleanup': 'valid-memcleanup',
-                'Systems_BusyBox_MemSafety': 'valid-memsafety',
-                'Systems_BusyBox_NoOverflows': 'no-overflow',
-                'Systems_DeviceDriversLinux64_ReachSafety': 'unreach-call',
                 'NoOverflows': 'no-overflow',
                 'ConcurrencySafety': 'unreach-call',
                 'Termination': 'termination'}
-    key = setName if setName == 'MemSafety-MemCleanup' else setName.split('-')[0]
+    #key = setName if setName == 'MemSafety-MemCleanup' or setName == 'Systems_AWS-C-Common_ReachSafety' else setName.split('-')[0]
+    if setName == 'MemSafety-MemCleanup':
+        key = setName
+    else:
+        prefix = setName.split('-')[0]
+        key = setName.split('-')[-1] if prefix == 'SoftwareSystems' else prefix
     return os.path.join('properties', mappings[key]+'.prp')
 
 def copyInXmlAndInject(cfgObj, outPath, svSet, inXmlFile, memPerRun, desc):
