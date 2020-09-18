@@ -11,12 +11,9 @@ mkdir -p /mnt/local/smack-project
 cd /mnt/local/smack-project
 git clone https://github.com/smackers/smack.git
 cd smack/bin
-#git checkout develop
-git checkout bb39de7
+git checkout develop
 
-#Build SMACK (using 64 processors during call to make)
-sed -i 's/^  make$/  make -j 64/g' build.sh
-sed -i 's/^  sudo make install$/  sudo make install -j 64/g' build.sh
+#Build SMACK
 ./build.sh
 
 #Set up boot script to start on reboot

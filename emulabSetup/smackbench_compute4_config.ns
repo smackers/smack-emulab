@@ -3,7 +3,7 @@ source tb_compat.tcl
 
 #Nodes
 set bench4 [$ns node]
-tb-set-node-os $bench4 UBUNTU14-64-STD
+tb-set-node-os $bench4 UBUNTU18-64-STD
 tb-set-hardware $bench4 d820
 tb-set-node-startcmd $bench4 "/proj/SMACK/scripts/smackbench_compute_buildscript.sh >& /tmp/smackbench_compute_build.out"
 

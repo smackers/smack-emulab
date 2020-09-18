@@ -14,7 +14,6 @@ sudo update-alternatives --config javac
 # node swapin, so this install isn't scripted here.)
 sudo apt-get install ant -y
 
-
 #Set permissions on local ephemeral storage,
 #so sudo is not needed
 sudo chgrp SMACK /mnt/local
@@ -32,9 +31,7 @@ git checkout svcomp2016
 sudo apt-get update
 sudo apt-get install software-properties-common -y
 
-#Build SMACK (using 64 processors during call to make)
-sed -i 's/^  make$/  make -j 64/g' build.sh
-sed -i 's/^  sudo make install$/  sudo make install -j 64/g' build.sh
+#Build SMACK
 ./build.sh
 
 #Install cgroup support
