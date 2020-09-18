@@ -11,11 +11,8 @@ mkdir -p /mnt/local/smack-project
 cd /mnt/local/smack-project
 git clone https://github.com/smackers/smack.git
 cd smack/bin
-#git checkout svcomp2016
-git checkout develop
-#git checkout llvm-3.7 
-#git checkout svcomp2017
-#git checkout avoid-mem-safety-region-collapse
+#git checkout develop
+git checkout bb39de7
 
 #Build SMACK (using 64 processors during call to make)
 sed -i 's/^  make$/  make -j 64/g' build.sh

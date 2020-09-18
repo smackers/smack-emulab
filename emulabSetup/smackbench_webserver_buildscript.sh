@@ -4,6 +4,7 @@
 sudo apt-get update
 sudo apt-get install htop -y
 sudo apt-get install apache2 -y
+sudo apt-get install python3-tempita -y
 
 #Change document root 
 sudo sed -i 's,/var/www/html,/proj/SMACK/SMACKBenchResults/data,g' /etc/apache2/sites-available/000-default.conf
