@@ -18,16 +18,16 @@ sudo apt-get update
 #   vim                        - interactive convenience
 #   software-properties-common - SMACK buildscript
 #   python-daemon              - SMACKBench Server
-sudo apt-get install htop vim software-properties-common python-daemon libc6-dev-i386 -y
+sudo apt-get install htop vim software-properties-common python-pip libc6-dev-i386 -y
+sudo pip install python-daemon
 
 # Install benchexec
 sudo apt-get install python3-tempita python3-pip python3-yaml -y
 sudo pip3 install coloredlogs
-rm -f *.deb
-#wget https://github.com/sosy-lab/benchexec/releases/download/1.18/benchexec_1.18-1_all.deb
 wget https://github.com/sosy-lab/benchexec/releases/download/2.2/benchexec_2.2-1_all.deb
 sudo apt install --install-recommends ./benchexec_*.deb -y
 sudo adduser $USER benchexec
+rm -f *.deb
 
 #Install java8 (required by cpachecker)
 #sudo add-apt-repository ppa:openjdk-r/ppa -y
