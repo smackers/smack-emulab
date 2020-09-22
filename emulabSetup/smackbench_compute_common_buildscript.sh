@@ -5,9 +5,6 @@
 sudo chgrp SMACK /mnt/local
 sudo chmod g+w /mnt/local
 
-#Change apt-get mirror to local cs.utah.edu mirror (makes it much faster)
-sudo sed -i  "s|us.archive.ubuntu.com/ubuntu/|ubuntu.cs.utah.edu/ubuntu/|g" /etc/apt/sources.list
-
 #Do not prompt plz
 export DEBIAN_FRONTEND=noninteractive
 
