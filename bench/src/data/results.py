@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from lib import *
 import datetime
 import subprocess
@@ -30,9 +30,9 @@ def printError(msg):
     Outputs python stack trace as html, for ease of readability in client's web
     browser.
     """
-    print "<h1>Bad results.py query</h1><hr/>"
-    print "<p>Query failed with the following message:</p>"
-    print "<p>" + msg + "</p>"
+    print("<h1>Bad results.py query</h1><hr/>")
+    print("<p>Query failed with the following message:</p>")
+    print("<p>" + msg + "</p>")
     exit()
 
 def filterResultsByRunsetFolder(runSets, form):
@@ -40,9 +40,9 @@ def filterResultsByRunsetFolder(runSets, form):
     Filters out results that don't have the specified runsetFolder name
     """
     ret = []
-    print "<pre>"
-    print form.getvalue('runset')
-    print "</pre>"
+    print("<pre>")
+    print(form.getvalue('runset'))
+    print("</pre>")
     for runset in runSets:
         if runset.runsetFolder in form.getvalue('runset'):
             ret.append(runset)
@@ -105,15 +105,15 @@ def generateTable(runSets):
     cmd = [tblGenExe, "-o", "-", "-f", "html", "-q", "--no-diff"] + xmlFiles
     try:
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-        print out.decode('utf-8')
+        print(out.decode('utf-8'))
     except subprocess.CalledProcessError as e:
         out = e.output
         printError("table-generator failed with the following output:\n<pre>" + out.decode('utf-8') + "</pre>")
 
 
 if __name__ == '__main__':
-    print "Content-Type: text/html"    # HTML is following
-    print                              # blank line, end of headers
+    print("Content-Type: text/html")   # HTML is following
+    print()                            # blank line, end of headers
     form = cgi.FieldStorage()
 
     runSets = getAllRunSets(runRoot, runFolderPrefix)
