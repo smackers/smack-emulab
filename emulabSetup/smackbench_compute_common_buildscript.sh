@@ -10,19 +10,18 @@ export DEBIAN_FRONTEND=noninteractive
 
 #Install packages
 sudo apt-get update
+sudo apt-get dist-upgrade -y
 # Packages:
 #   htop                       - interactive convenience
 #   vim                        - interactive convenience
 #   software-properties-common - SMACK buildscript
-#   python-daemon              - SMACKBench Server
-sudo apt-get install htop vim software-properties-common python-pip libc6-dev-i386 -y
-sudo pip install python-daemon
+#   python3-daemon              - SMACKBench Server
+sudo apt-get install htop vim software-properties-common python3-daemon libc6-dev-i386 -y
 
 # Install benchexec
-sudo apt-get install python3-tempita python3-pip python3-yaml -y
-sudo pip3 install coloredlogs
-wget https://github.com/sosy-lab/benchexec/releases/download/2.2/benchexec_2.2-1_all.deb
-sudo apt install --install-recommends ./benchexec_*.deb -y
+sudo apt-get install python3-coloredlogs -y
+wget https://github.com/sosy-lab/benchexec/releases/download/3.3/benchexec_3.3-1_all.deb
+sudo apt install --install-recommends ./benchexec_3.3-1_all.deb -y
 sudo adduser $USER benchexec
 rm -f *.deb
 
