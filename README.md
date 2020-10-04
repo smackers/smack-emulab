@@ -71,3 +71,13 @@ cd /proj/SMACK/SMACKBenchResults/data/runs
 for f in `find . -mindepth 3 -maxdepth 3 -name "*<run-id>*.xml"`; do a=`dirname $f`; b=`dirname $a`; echo $b; done | xargs -n 1 -P 32 rm -r
 ```
 `<run-id>` is the unique descriptor of the run that you want to remove. Please double check if the wildcard expands to more files than what you are intereted in.
+
+
+## Compare runs
+
+To compare two runs, please use `diff.py` under the script directory. It takes two arguments -- (parts of) the descriptors of the two runs (the argument to the `-d` options of `SMACKBench.py`) to compare. For example,
+
+```bash
+python diff.py develop-d3ed214 develop-9d4cb75
+```
+
