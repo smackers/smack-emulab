@@ -249,6 +249,9 @@ def runBenchExec(cfgObj, inXmlFile, outPath, concurRunCnt, debug):
     #  to know the last item of the -o value is a folder.
     cmd += ['-o', path.join(outPath, 'results') + '/']
     cmd += ['--no-compress']
+    cmd += ['--read-only-dir', '/']
+    cmd += ['--overlay-dir', '/home']
+    cmd += ['--overlay-dir', '/proj']
     cmd += ['-N', concurRunCnt]
 
     print(cmd)
@@ -301,7 +304,7 @@ if __name__ == '__main__':
         subprocess.check_call(['pkill','-SIGTERM','-f','SMACKBench.py'])
     # New benchexec installation requires PYTHON_PATH to be set
     if "PYTHONPATH" in os.environ:
-      os.environ["PYTHONPATH"] += path.join(os.getcwd(), "benchexec")
+      os.environ["PYTHONPATH"] += ':' + path.join(os.getcwd(), "benchexec")
     else:
       os.environ["PYTHONPATH"] = path.join(os.getcwd(), "benchexec")
     #Read the config file
